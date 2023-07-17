@@ -7,4 +7,5 @@ class User < ApplicationRecord
     has_many :dislikes
     has_many :comments
     has_many :group_memberships
+    has_many :messages
 end

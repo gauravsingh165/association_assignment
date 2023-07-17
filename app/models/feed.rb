@@ -5,4 +5,5 @@ class Feed < ApplicationRecord
   has_many :dislikes
   has_many :comments
   has_many :group_feed_approvals
+  has_many :shared_feed
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_17_062938) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_17_073302) do
   create_table "comments", charset: "utf8mb3", force: :cascade do |t|
     t.string "commentt"
     t.bigint "user_id", null: false
@@ -19,6 +19,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_17_062938) do
     t.datetime "updated_at", null: false
     t.index ["feed_id"], name: "index_comments_on_feed_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "conversations", charset: "utf8mb3", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_conversations_on_group_id"
   end
 
   create_table "dislikes", charset: "utf8mb3", force: :cascade do |t|
@@ -72,6 +79,23 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_17_062938) do
     t.index ["feed_id"], name: "index_images_on_feed_id"
   end
 
+  create_table "individual_conversations", charset: "utf8mb3", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "individual_messages", charset: "utf8mb3", force: :cascade do |t|
+    t.bigint "individual_conversation_id", null: false
+    t.bigint "sender_id", null: false
+    t.bigint "reciver_id", null: false
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["individual_conversation_id"], name: "index_individual_messages_on_individual_conversation_id"
+    t.index ["reciver_id"], name: "index_individual_messages_on_reciver_id"
+    t.index ["sender_id"], name: "index_individual_messages_on_sender_id"
+  end
+
   create_table "likes", charset: "utf8mb3", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "feed_id", null: false
@@ -79,6 +103,28 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_17_062938) do
     t.datetime "updated_at", null: false
     t.index ["feed_id"], name: "index_likes_on_feed_id"
     t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
+  create_table "messages", charset: "utf8mb3", force: :cascade do |t|
+    t.bigint "conversation_id", null: false
+    t.bigint "user_id", null: false
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
+  create_table "recivers", charset: "utf8mb3", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "senders", charset: "utf8mb3", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", charset: "utf8mb3", force: :cascade do |t|
@@ -91,6 +137,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_17_062938) do
 
   add_foreign_key "comments", "feeds"
   add_foreign_key "comments", "users"
+  add_foreign_key "conversations", "groups"
   add_foreign_key "dislikes", "feeds"
   add_foreign_key "dislikes", "users"
   add_foreign_key "feeds", "users"
@@ -99,6 +146,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_17_062938) do
   add_foreign_key "group_memberships", "groups"
   add_foreign_key "group_memberships", "users"
   add_foreign_key "images", "feeds"
+  add_foreign_key "individual_messages", "individual_conversations"
+  add_foreign_key "individual_messages", "recivers"
+  add_foreign_key "individual_messages", "senders"
   add_foreign_key "likes", "feeds"
   add_foreign_key "likes", "users"
+  add_foreign_key "messages", "conversations"
+  add_foreign_key "messages", "users"
 end
