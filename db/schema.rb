@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_17_073302) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_17_073706) do
   create_table "comments", charset: "utf8mb3", force: :cascade do |t|
     t.string "commentt"
     t.bigint "user_id", null: false
@@ -127,6 +127,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_17_073302) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "shared_feeds", charset: "utf8mb3", force: :cascade do |t|
+    t.bigint "sender_id", null: false
+    t.bigint "reciver_id", null: false
+    t.bigint "feed_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["feed_id"], name: "index_shared_feeds_on_feed_id"
+    t.index ["reciver_id"], name: "index_shared_feeds_on_reciver_id"
+    t.index ["sender_id"], name: "index_shared_feeds_on_sender_id"
+  end
+
   create_table "users", charset: "utf8mb3", force: :cascade do |t|
     t.string "username"
     t.string "email"
@@ -153,4 +164,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_17_073302) do
   add_foreign_key "likes", "users"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users"
+  add_foreign_key "shared_feeds", "feeds"
+  add_foreign_key "shared_feeds", "recivers"
+  add_foreign_key "shared_feeds", "senders"
+  add_foreign_key "shared_feeds", "users"
 end
